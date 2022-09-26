@@ -9,6 +9,4 @@ export class Role {
     @Column({ type: 'text' })
     name: string
 
-    @ManyToMany(()=>Member, member => member.role) //colocar many to many
-    members: Member
 }

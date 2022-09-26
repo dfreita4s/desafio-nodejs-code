@@ -25,7 +25,7 @@ export class Member {
     @JoinTable()
     departments: Department[]
 
-    @OneToMany(()=>Role, role => role.members)
-    @JoinColumn({name: 'role_id'})
+    @ManyToMany(()=>Role)
+    @JoinColumn()
     role: Role
 }

@@ -31,6 +31,9 @@ export class MemberController {
                 success: false, 
                 message: 'Member with that ID not found'
             })
+
+        
+        console.log(memberToRemove)
         
         await memberRepository.remove(memberToRemove);
 
