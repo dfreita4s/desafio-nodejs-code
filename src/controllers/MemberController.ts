@@ -23,6 +23,62 @@ export class MemberController {
         });
 
     }
+    async remove(req: Request, res: Response){
+        const memberToRemove = await memberRepository.findOneBy({id: req.params.id})
+        
+        if(!memberToRemove)
+            return res.status(404).json({
+                success: false, 
+                message: 'Member with that ID not found'
+            })
+        
+        await memberRepository.remove(memberToRemove);
+
+        return res.status(200).json({
+            success: true,
+            payload: memberToRemove.name,
+            message: 'Resource deleted successfully'
+        })
+    }
+
+    async update(req: Request, res: Response){
+        try{
+            const memberToEdit = await memberRepository.findOneBy({id: req.params.id});
+            if(!memberToEdit)
+                return res.status(404).json({
+                    success: false,
+                    message: 'Member with that ID not found'
+                })
+            const memberEdited = await memberRepository.update(memberToEdit, req.body);
+
+            return res.status(200).json({
+                success: true,
+                payload: memberEdited,
+                message: 'Resource updated successfully'
+            });
+        } catch (error){
+            console.log(error)
+            return res.status(500).json({
+                success: false,
+                message: 'Internal server Error'
+            });
+        }
+    }
+
+    async view(req: Request, res: Response){
+        const viewMember = await memberRepository.findOneBy({id: req.params.id})
+        if(!viewMember)
+            return res.status(404).json({
+                success: false,
+                message: 'Memeber with that ID not found'
+            });
+
+        return res.status(200).json({
+            success: true,
+            payload: viewMember
+        })
+    }
+
     async get(req: Request, res: Response) {
         const members = await memberRepository.find({
             relations: {

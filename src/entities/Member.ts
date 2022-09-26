@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Department } from "./Department";
 import { Role } from "./Role";
 
@@ -25,7 +25,7 @@ export class Member {
     @JoinTable()
     departments: Department[]
 
-    @OneToOne(()=>Role, role => role.member)
+    @OneToMany(()=>Role, role => role.members)
     @JoinColumn({name: 'role_id'})
     role: Role
 }

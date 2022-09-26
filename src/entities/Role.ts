@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Member } from "./Member";
 
 @Entity('roles')
@@ -9,6 +9,6 @@ export class Role {
     @Column({ type: 'text' })
     name: string
 
-    @OneToOne(()=>Member, member => member.role) //colocar many to many
-    member: Member
+    @ManyToMany(()=>Member, member => member.role) //colocar many to many
+    members: Member
 }
