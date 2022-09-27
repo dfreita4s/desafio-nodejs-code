@@ -12,4 +12,4 @@ AppDataSource.initialize().then(()=> {
     
     return app.listen(process.env.PORT);
 
-})
+}).finally(()=> console.log('Server started'))

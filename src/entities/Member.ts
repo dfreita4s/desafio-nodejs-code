@@ -25,7 +25,7 @@ export class Member {
     @JoinTable()
     departments: Department[]
 
-    @ManyToMany(()=>Role)
-    @JoinColumn()
-    role: Role
+    @ManyToMany(()=> Role)
+    @JoinTable()
+    role: Role[]
 }
