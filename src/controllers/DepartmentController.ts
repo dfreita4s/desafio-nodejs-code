@@ -5,6 +5,14 @@ export class DepartmentController {
     async create(req: Request, res: Response){
         const newDepartment = departmentRepository.create(req.body);
 
+        const depExists = await departmentRepository.findOneBy({ name: req.body.name })
+
+        if (depExists)
+            return res.status(409).json({
+                success: false,
+                message: 'Department already exists'
+            });
+
         await departmentRepository.save(newDepartment);
 
         return res.status(201).json({

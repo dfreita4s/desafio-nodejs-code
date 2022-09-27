@@ -5,6 +5,14 @@ export class RoleController {
     async create(req: Request, res: Response) {
         const newRole = roleRepository.create(req.body);
 
+        const roleExists = await roleRepository.findOneBy({ name: req.body.name })
+
+        if (roleExists)
+            return res.status(409).json({
+                success: false,
+                message: 'Role already exists'
+            });
+
         await roleRepository.save(newRole);
 
         return res.status(201).json({
@@ -17,11 +25,11 @@ export class RoleController {
         const roleToRemove = await roleRepository.findOneBy({ id: req.params.id })
 
         if (!roleToRemove)
-                return res.status(404).json({
-                    success: false,
-                    payload: [],
-                    message: 'Role with that ID not found'
-                }) 
+            return res.status(404).json({
+                success: false,
+                payload: [],
+                message: 'Role with that ID not found'
+            })
 
         await roleRepository.remove(roleToRemove);
 
@@ -39,8 +47,16 @@ export class RoleController {
                     success: false,
                     payload: [],
                     message: 'Role with that ID not found'
-                }) 
-          
+                })
+            
+        const roleExists = await roleRepository.findOneBy({ name: req.body.name })
+
+        if (roleExists)
+            return res.status(409).json({
+                success: false,
+                message: 'Role already exists'
+            });
+
             const roleEdited = await roleRepository.update(roleToEdit, req.body);
             return res.status(200).json({
                 success: true,

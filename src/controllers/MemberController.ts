@@ -6,7 +6,10 @@ import { memberRepository } from "../repositores/memberRepository";
 import { roleRepository } from "../repositores/roleRepository";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { userInfo } from "os";
+
+type jwtPayload = {
+    id: string
+}
 
 export class MemberController {
     async create(req: Request, res: Response) {
@@ -136,15 +139,39 @@ export class MemberController {
                 success: false,
                 message: 'Email or Password not found'
             });
-        
 
-        const token = jwt.sign({id: member.id}, process.env.JWT_PASS ?? '', {
-            expiresIn: '8h'})
+
+        const token = jwt.sign({ id: member.id }, process.env.JWT_PASS ?? '', {
+            expiresIn: '8h'
+        })
 
         return res.status(200).json({
             success: true,
             payload: token,
             message: 'Login successfully'
         })
+    }
+
+    async getMember(req: Request, res: Response) {
+        const { authorization } = req.headers
+
+        if (!authorization)
+            return res.status(401).json({
+                success: false,
+                message: 'Unauthorized'
+            });
+
+        const token = authorization.split(' ')[1]
+
+        const { id } = jwt.verify(token, process.env.JWT_PASS ?? '') as jwtPayload
+
+        const member = await memberRepository.findOneBy({ id })
+
+        if (!member)
+            return res.status(401).json({
+                success: false,
+                message: 'Unauthorized'
+            });
+
     }
 }
