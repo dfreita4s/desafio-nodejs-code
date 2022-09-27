@@ -4,13 +4,32 @@ import { Member } from "../entities/Member";
 import { departmentRepository } from "../repositores/departmentRepository";
 import { memberRepository } from "../repositores/memberRepository";
 import { roleRepository } from "../repositores/roleRepository";
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import { userInfo } from "os";
 
 export class MemberController {
     async create(req: Request, res: Response) {
 
+        const { email, password } = req.body
+
+        const memberExist = await memberRepository.findOneBy({ email })
+
+        if (memberExist)
+            return res.status(409).json({
+                success: false,
+                message: 'Email already exists'
+            });
+
+        const hasPassword = await bcrypt.hash(password, 10)
+
+
         const deps = await departmentRepository.find({ where: { id: In(req.body.departments) } })
 
-        const newMember = memberRepository.create({ ...req.body } as Member);
+        const newMember = memberRepository.create({
+            ...req.body,
+            password: hasPassword
+        } as Member);
 
         const member = await memberRepository.save(newMember);
 
@@ -56,22 +75,21 @@ export class MemberController {
             const editedMember = memberRepository.create({ ...req.body } as Member);
 
             if (!memberToEdit)
-            return res.status(404).json({
-                success: false,
-                message: 'Member with that ID not found'
-            })
-            
-            
+                return res.status(404).json({
+                    success: false,
+                    message: 'Member with that ID not found'
+                })
+
             editedMember.departments = deps;
             editedMember.role = roles;
-            
-            console.log(memberToEdit)
-            console.log(req.body)
-            console.log(editedMember)
 
-            const memberEdited = await memberRepository.update(memberToEdit, editedMember);
+            const memberEdited = await memberRepository.preload({
+                ...editedMember,
+                id: memberToEdit.id,
+            });
 
-            console.log(memberEdited)
+            if (memberEdited != undefined)
+                memberRepository.save(memberEdited)
 
             return res.status(200).json({
                 success: true,
@@ -101,14 +119,32 @@ export class MemberController {
         })
     }
 
-    async get(req: Request, res: Response) {
-        const members = await memberRepository.find({
-            relations: {
-                departments: true
-            }
-        });
+    async login(req: Request, res: Response) {
+        const { email, password } = req.body;
+
+        const member = await memberRepository.findOneBy({ email });
+        if (!member)
+            return res.status(409).json({
+                success: false,
+                message: 'Email or Password not found'
+            });
+
+        const verifyPass = await bcrypt.compare(password, member.password);
+
+        if (!verifyPass)
+            return res.status(409).json({
+                success: false,
+                message: 'Email or Password not found'
+            });
+        
+
+        const token = jwt.sign({id: member.id}, process.env.JWT_PASS ?? '', {
+            expiresIn: '8h'})
+
         return res.status(200).json({
-            members
+            success: true,
+            payload: token,
+            message: 'Login successfully'
         })
     }
 }

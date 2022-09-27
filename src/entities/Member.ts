@@ -12,7 +12,7 @@ export class Member {
     @Column({ type: 'text' })
     name: string
 
-    @Column({ type: 'text' })
+    @Column({ type: 'text', unique:true })
     email: string
 
     @Column({ type: 'text' })
@@ -21,11 +21,11 @@ export class Member {
     @Column({ type: 'date' })
     birthday: Date
 
-    @ManyToMany(()=> Department)
+    @ManyToMany(() => Department)
     @JoinTable()
     departments: Department[]
 
-    @ManyToMany(()=> Role)
+    @ManyToMany(() => Role)
     @JoinTable()
     role: Role[]
 }

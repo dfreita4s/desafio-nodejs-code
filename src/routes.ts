@@ -9,7 +9,7 @@ routes.post('/member/create', new MemberController().create);
 routes.get('/member/:id', new MemberController().view);
 routes.delete('/member/:id', new MemberController().remove);
 routes.post('/member/update/:id', new MemberController().update);
-routes.get('/members', new MemberController().get);
+routes.post('/login', new MemberController().login)
 
 routes.post('/role/create', new RoleController().create);
 routes.get('/role/:id', new RoleController().view);

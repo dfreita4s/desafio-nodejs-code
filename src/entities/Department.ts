@@ -7,7 +7,7 @@ export class Department {
     @PrimaryGeneratedColumn()
     id: string
 
-    @Column({ type: 'text' })
+    @Column({ type: 'text', /*unique:true*/ })
     name: string
 
 }
