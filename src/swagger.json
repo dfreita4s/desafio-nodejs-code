@@ -1,0 +1,456 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API-desafio-Code",
+        "description": "Documentação de uma api para um sistema de Empresas Jrs. ( Code Voa !)",
+        "contact": {
+            "email": "daniel.freitas@codejr.com.br"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/",
+            "description": "Path básico"
+        }
+    ],
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "member"
+                ],
+                "summary": "Login de usuário",
+                "description": "Loga o usuário",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email para o login",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "Senha para o login",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação bem sucedida",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Email/senha inválidos"
+                    }
+                }
+            }
+        },
+        "/member/create": {
+            "post": {
+                "tags": [
+                    "member"
+                ],
+                "summary": "Cria um novo usuário",
+                "description": "",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Nome do membro",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email do membro",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "Senha do membro",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "birthday",
+                        "in": "query",
+                        "description": "Data de aniversário do membro",
+                        "required": true,
+                        "type": "Date"
+                    },
+                    {
+                        "name": "departaments",
+                        "in": "query",
+                        "description": "Departamento(s) que o membro participa",
+                        "required": true,
+                        "type": "Department[]"
+                    },
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "description": "Cargo(s) do membro",
+                        "required": true,
+                        "type": "Role[]"
+                    }
+                ],
+                "responses": {
+                    "409": {
+                        "description": "Email já existe"
+                    },
+                    "201": {
+                        "description": "Operação bem sucedida"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                }
+            }
+        },
+        "/member/view/:id": {
+            "get": {
+                "tags": [
+                    "member"
+                ],
+                "summary": "Visualiza um membro",
+                "description": "A partir de um ID, mostra os dados de um membro",
+                "parameters": {
+                    "name": "id",
+                    "in": "query",
+                    "description": "ID do membro",
+                    "required": true,
+                    "type": "string"
+                },
+                "responses": {
+                    "404": {
+                        "description": "Membro não encontrado",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "200": {
+                        "description": "Operação bem sucedida, retorna o membro"
+                    }
+                }
+            }
+        },
+        "/member/:id": {
+            "delete": {
+                "tags": [
+                    "member"
+                ],
+                "summary": "Deleta um membro do banco de dados",
+                "description": "A partir de um ID deleta um membro do banco de dados",
+                "parameters": {
+                    "name": "id",
+                    "in": "query",
+                    "description": "ID do membro",
+                    "required": true,
+                    "type": "string"
+                },
+                "responses": {
+                    "404": {
+                        "description": "Membro não encontrado"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "200": {
+                        "description": "Membro deletado corretamente"
+                    }
+                }
+            }
+        },
+        "/member/update/:id": {
+            "post": {
+                "tags": [
+                    "member"
+                ],
+                "summary": "Edita os dados de um membro",
+                "description": "Pode editar todos os dados de um membro menos o ID",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Nome do membro",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email do membro",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "Senha do membro",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "birthday",
+                        "in": "query",
+                        "description": "Data de aniversário do membro",
+                        "required": false,
+                        "type": "Date"
+                    },
+                    {
+                        "name": "departaments",
+                        "in": "query",
+                        "description": "Departamento(s) que o membro participa",
+                        "required": false,
+                        "type": "Department[]"
+                    },
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "description": "Cargo(s) do membro",
+                        "required": false,
+                        "type": "Role[]"
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Membro não encontrado"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "200": {
+                        "description": "Membro editado corretamente"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        },
+        "/role/create": {
+            "post": {
+                "tags": [
+                    "role"
+                ],
+                "summary": "Cria um novo cargo",
+                "description": "",
+                "parameters": {
+                    "name": "name",
+                    "in": "query",
+                    "description": "Nome do cargo",
+                    "required": true,
+                    "type": "string"
+                },
+                "responses": {
+                    "409": {
+                        "description": "Cargo já existe"
+                    },
+                    "201": {
+                        "description": "Operação bem sucedida"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                }
+            }
+        },
+        "/role/view/:id": {
+            "get": {
+                "tags": [
+                    "role"
+                ],
+                "summary": "Visualiza um cargo",
+                "description": "A partir de um ID, mostra os dados de um cargo",
+                "parameters": {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID do cargo",
+                    "required": true,
+                    "type": "string"
+                },
+                "responses": {
+                    "404": {
+                        "description": "Cargo não encontrado"
+                    },
+                    "200": {
+                        "description": "Operação bem sucedida, retorna o cargo"
+                    }
+                }
+            }
+        },
+        "/role/delete/:id": {
+            "delete": {
+                "tags": [
+                    "role"
+                ],
+                "summary": "Deleta um cargo do banco de dados",
+                "description": "A partir de um ID deleta um cargo do banco de dados",
+                "parameters": {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID do cargo",
+                    "required": true,
+                    "type": "string"
+                },
+                "responses": {
+                    "404": {
+                        "description": "Cargo não encontrado"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "200": {
+                        "description": "Cargo deletado corretamente"
+                    }
+                }
+            }
+        },
+        "/role/update/:id": {
+            "post": {
+                "tags": [
+                    "role"
+                ],
+                "summary": "Edita os dados de um cargo",
+                "description": "Edita o nome do cargo",
+                "parameters": {
+                    "name": "name",
+                    "in": "query",
+                    "description": "Nome do membro",
+                    "required": false,
+                    "type": "string"
+                },
+                "responses": {
+                    "404": {
+                        "description": "Cargo não encontrado"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "200": {
+                        "description": "Cargo editado corretamente"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        },
+        "/department/create": {
+            "post": {
+                "tags": [
+                    "department"
+                ],
+                "summary": "Cria um novo departamento",
+                "description": "",
+                "parameters": {
+                    "name": "name",
+                    "in": "query",
+                    "description": "Nome do departamento",
+                    "required": true,
+                    "type": "string"
+                },
+                "responses": {
+                    "409": {
+                        "description": "Departamento já existe"
+                    },
+                    "201": {
+                        "description": "Operação bem sucedida"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                }
+            }
+        },
+        "/department/view/:id": {
+            "get": {
+                "tags": [
+                    "department"
+                ],
+                "summary": "Visualiza um departamento",
+                "description": "A partir de um ID, mostra os dados de um departamento",
+                "parameters": {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID do departamento",
+                    "required": true,
+                    "type": "string"
+                },
+                "responses": {
+                    "404": {
+                        "description": "Departamento não encontrado"
+                    },
+                    "200": {
+                        "description": "Operação bem sucedida, retorna o departamento"
+                    }
+                }
+            }
+        },
+        "/department/delete/:id": {
+            "delete": {
+                "tags": [
+                    "department"
+                ],
+                "summary": "Deleta um departamento do banco de dados",
+                "description": "A partir de um ID deleta um departamento do banco de dados",
+                "parameters": {
+                    "name": "id",
+                    "in": "path",
+                    "description": "ID do departamento",
+                    "required": true,
+                    "type": "string"
+                },
+                "responses": {
+                    "404": {
+                        "description": "Departamento não encontrado"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "200": {
+                        "description": "Departamento deletado corretamente"
+                    }
+                }
+            }
+        },
+        "/department/update/:id": {
+            "post": {
+                "tags": [
+                    "department"
+                ],
+                "summary": "Edita os dados de um departamento",
+                "description": "Edita o nome do departamento",
+                "parameters": {
+                    "name": "name",
+                    "in": "query",
+                    "description": "Nome do membro",
+                    "required": false,
+                    "type": "string"
+                },
+                "responses": {
+                    "404": {
+                        "description": "Departamento não encontrado"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "200": {
+                        "description": "Departamento editado corretamente"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        }
+    }
+}
